@@ -56,3 +56,5 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-created_time']
+#        verbose_name = '博文'
+#        verbose_name_plural = verbose_name

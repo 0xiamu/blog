@@ -5,5 +5,7 @@ from .models import Comments
 
 class CommentsAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'email', 'created_time', ]
+
+
 admin.site.register(Comments, CommentsAdmin)
 

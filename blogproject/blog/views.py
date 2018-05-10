@@ -3,18 +3,18 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post, Category, Tag
 import markdown
 from comments.forms import CommentForm
-# Create your views here.
 from django.views.generic import ListView, DetailView
 from django.utils.text import slugify
 from markdown.extensions.toc import TocExtension
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 
 class IndexView(ListView):
     model = Post
     template_name = 'blog/index.html'
     context_object_name = 'post_list'
-    paginate_by = 1
+    paginate_by = 2
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -80,7 +80,8 @@ class IndexView(ListView):
 '''
 
 
-'''def detail(request, pk):
+@login_required(login_url='/login/')
+def detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.increase_views()
     post.body = markdown.markdown(post.body,
@@ -94,9 +95,9 @@ class IndexView(ListView):
     context = {'post': post,
                'form': form,
                'comment_list': comment_list}
-    return render(request, 'blog/detail.html', context=context)'''
+    return render(request, 'blog/detail.html', context=context)
 
-
+'''
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/detail.html'
@@ -106,7 +107,7 @@ class PostDetailView(DetailView):
         response = super(PostDetailView, self).get(request, *args, **kwargs)
         self.object.increase_views()
         return response
-    
+
     def get_object(self, queryset=None):
         post = super(PostDetailView, self).get_object(queryset=None)
         md = markdown.Markdown(extensions=[
@@ -127,6 +128,8 @@ class PostDetailView(DetailView):
             'comment_list': comment_list
         })
         return content
+'''
+
 '''def archives(request, year, month):
     post_list = Post.objects.filter(created_time__year=year,
                                     created_time__month=month
